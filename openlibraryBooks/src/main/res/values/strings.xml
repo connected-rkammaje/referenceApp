@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Search screen strings -->
+    <string name="search_for_books">Search for books</string>
+    <string name="search">Search</string>
+    <string name="searching">Searching…</string>
+    <string name="search_books">Search Books</string>
+    <string name="dismiss">Dismiss</string>
+
+    <!-- Book item strings -->
+    <string name="book_cover_description">Book cover for %1$s</string>
+    <string name="author_prefix">by %1$s</string>
+    <string name="published_prefix">Published: %1$s</string>
+
+    <!-- Error messages -->
+    <string name="request_failed">Request failed: %1$s</string>
+    <string name="unknown_error">Unknown error occurred</string>
+</resources>
