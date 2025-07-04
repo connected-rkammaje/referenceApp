@@ -1,20 +1,20 @@
 package com.tw.openlibrarybooks.ui
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tw.common.RequestResult
+import com.tw.common.ResourceProvider
 import com.tw.networking.Book
 import com.tw.openlibrarybooks.OpenlibraryRepository
 import com.tw.openlibrarybooks.R
-import com.tw.common.RequestResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.SharingStarted
 import javax.inject.Inject
 
 /**
@@ -33,10 +33,14 @@ data class BookSearchViewState(
 @HiltViewModel
 class BookSearchViewModel @Inject constructor(
     private val openlibraryRepository: OpenlibraryRepository,
-    private val application: Application
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
+
+    companion object {
+        private const val SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
+    }
 
     /**
      * Combined view state that contains all UI-related state.
@@ -55,9 +59,9 @@ class BookSearchViewModel @Inject constructor(
             errorMessage = when (searchResult) {
                 is RequestResult.Error -> {
                     if (searchResult.message.isNotEmpty()) {
-                        application.getString(R.string.request_failed, searchResult.message)
+                        resourceProvider.getString(R.string.request_failed, searchResult.message)
                     } else {
-                        application.getString(R.string.unknown_error)
+                        resourceProvider.getString(R.string.unknown_error)
                     }
                 }
                 else -> null
@@ -65,7 +69,7 @@ class BookSearchViewModel @Inject constructor(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(SUBSCRIPTION_TIMEOUT_MILLIS),
         initialValue = BookSearchViewState()
     )
 
