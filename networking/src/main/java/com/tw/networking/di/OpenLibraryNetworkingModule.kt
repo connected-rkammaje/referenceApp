@@ -1,7 +1,7 @@
 package com.tw.networking.di
 
-import com.tw.networking.OpenLibraryApi
-import com.tw.networking.OpenLibraryService
+import com.tw.networking.openlibrary.OpenLibraryApi
+import com.tw.networking.openlibrary.OpenLibraryService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object NetworkingModule {
+object OpenLibraryNetworkingModule {
 
     private const val BASE_URL = "https://openlibrary.org/"
 

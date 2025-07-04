@@ -18,7 +18,12 @@ out/
 # release/
 
 # Gradle files
-
+common/build/
+nasaAstronomy/build/
+common/build/
+networking/build/
+build/
+openlibraryBooks/build/
 
 # Local configuration file (sdk path, etc)
 local.properties

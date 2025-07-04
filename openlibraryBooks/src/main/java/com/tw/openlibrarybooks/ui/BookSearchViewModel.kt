@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tw.common.RequestResult
 import com.tw.common.ResourceProvider
-import com.tw.networking.Book
+import com.tw.networking.openlibrary.Book
 import com.tw.openlibrarybooks.OpenlibraryRepository
 import com.tw.openlibrarybooks.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +37,7 @@ class BookSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     companion object {
         private const val SUBSCRIPTION_TIMEOUT_MILLIS = 5000L
@@ -46,7 +47,7 @@ class BookSearchViewModel @Inject constructor(
      * Combined view state that contains all UI-related state.
      */
     val viewState: StateFlow<BookSearchViewState> = combine(
-        _searchQuery.asStateFlow(),
+        searchQuery,
         openlibraryRepository.searchResults
     ) { searchQuery: String, searchResult: RequestResult<List<Book>> ->
         BookSearchViewState(

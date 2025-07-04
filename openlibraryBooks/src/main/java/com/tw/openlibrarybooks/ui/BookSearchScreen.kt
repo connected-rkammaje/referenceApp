@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.tw.networking.Book
+import com.tw.networking.openlibrary.Book
 import com.tw.openlibrarybooks.R
 import com.tw.common.Spacing
 

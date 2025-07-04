@@ -1,9 +1,9 @@
 package com.tw.openlibrarybooks
 
 import com.tw.common.RequestResult
-import com.tw.networking.Book
-import com.tw.networking.OpenLibraryService
-import com.tw.networking.toBook
+import com.tw.networking.openlibrary.Book
+import com.tw.networking.openlibrary.OpenLibraryService
+import com.tw.networking.openlibrary.toBook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

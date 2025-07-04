@@ -1,6 +1,6 @@
 package com.tw.openlibrarybooks.di
 
-import com.tw.networking.OpenLibraryService
+import com.tw.networking.openlibrary.OpenLibraryService
 import com.tw.openlibrarybooks.OpenlibraryRepository
 import dagger.Module
 import dagger.Provides
