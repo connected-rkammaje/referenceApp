@@ -3,7 +3,7 @@ package com.tw.openlibrarybooks.ui
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tw.openlibrarybooks.Book
+import com.tw.networking.Book
 import com.tw.openlibrarybooks.OpenlibraryRepository
 import com.tw.openlibrarybooks.R
 import com.tw.common.RequestResult

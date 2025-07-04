@@ -85,10 +85,11 @@ class MainNavigationFragment : Fragment() {
 @Composable
 private fun mainNavigationScreen(
     navController: NavHostController,
-    onNasaAstronomyClick: () -> Unit
+    onNasaAstronomyClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(Spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,

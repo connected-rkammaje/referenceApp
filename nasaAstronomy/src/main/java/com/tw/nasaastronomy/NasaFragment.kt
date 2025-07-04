@@ -62,10 +62,11 @@ class NasaFragment : Fragment() {
 
 @Composable
 private fun nasaMainScreen(
-    onNavigateToDetail: () -> Unit
+    onNavigateToDetail: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(Spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,

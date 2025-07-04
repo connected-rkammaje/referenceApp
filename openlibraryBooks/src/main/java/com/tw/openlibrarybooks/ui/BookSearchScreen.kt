@@ -34,14 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.tw.openlibrarybooks.Book
+import com.tw.networking.Book
 import com.tw.openlibrarybooks.R
 import com.tw.common.Spacing
 
@@ -50,7 +48,9 @@ import com.tw.common.Spacing
  * This is the main entry point for the book search functionality.
  */
 @Composable
-fun BookSearchScreen() {
+fun BookSearchScreen(
+    modifier: Modifier = Modifier
+) {
     val viewModel: BookSearchViewModel = hiltViewModel()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
@@ -58,7 +58,8 @@ fun BookSearchScreen() {
         viewState = viewState,
         onSearchQueryChange = viewModel::updateSearchQuery,
         onSearchBooks = viewModel::searchBooks,
-        onClearError = viewModel::clearError
+        onClearError = viewModel::clearError,
+        modifier = modifier
     )
 }
 
@@ -72,10 +73,11 @@ private fun BookSearchScreenInternal(
     viewState: BookSearchViewState,
     onSearchQueryChange: (String) -> Unit,
     onSearchBooks: () -> Unit,
-    onClearError: () -> Unit
+    onClearError: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(Spacing.large)
     ) {
@@ -93,55 +95,62 @@ private fun BookSearchScreenInternal(
 private fun BookSearchBar(
     viewState: BookSearchViewState,
     onSearchQueryChange: (String) -> Unit,
-    onSearchBooks: () -> Unit
+    onSearchBooks: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    // Search Bar
-    OutlinedTextField(
-        value = viewState.searchQuery,
-        onValueChange = onSearchQueryChange,
-        label = { Text(stringResource(R.string.search_for_books)) },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = stringResource(R.string.search)
-            )
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
+    Column(modifier = modifier) {
+        // Search Bar
+        OutlinedTextField(
+            value = viewState.searchQuery,
+            onValueChange = onSearchQueryChange,
+            label = { Text(stringResource(R.string.search_for_books)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(R.string.search)
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    onSearchBooks()
+                }
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.Companion.height(Spacing.large))
+
+        // Search Button
+        Button(
+            onClick = {
                 onSearchBooks()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = viewState.searchQuery.isNotBlank() && !viewState.isLoading
+        ) {
+            if (viewState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.Companion.size(Spacing.large),
+                    strokeWidth = Spacing.progressIndicatorStroke
+                )
+                Spacer(modifier = Modifier.Companion.width(Spacing.small))
             }
-        ),
-        modifier = Modifier.fillMaxWidth(),
-        singleLine = true
-    )
-
-    Spacer(modifier = Modifier.Companion.height(Spacing.large))
-
-    // Search Button
-    Button(
-        onClick = {
-            onSearchBooks()
-        },
-        modifier = Modifier.fillMaxWidth(),
-        enabled = viewState.searchQuery.isNotBlank() && !viewState.isLoading
-    ) {
-        if (viewState.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.Companion.size(Spacing.large),
-                strokeWidth = Spacing.progressIndicatorStroke
-            )
-            Spacer(modifier = Modifier.Companion.width(Spacing.small))
+            Text(if (viewState.isLoading) stringResource(R.string.searching) else stringResource(R.string.search_books))
         }
-        Text(if (viewState.isLoading) stringResource(R.string.searching) else stringResource(R.string.search_books))
     }
 }
 
 @Composable
-private fun BooksList(viewState: BookSearchViewState) {
+private fun BooksList(
+    viewState: BookSearchViewState,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Spacing.small)
     ) {
         items(viewState.books) { book ->
@@ -151,39 +160,48 @@ private fun BooksList(viewState: BookSearchViewState) {
 }
 
 @Composable
-private fun BookSearchError(error: String, onClearError: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer
-        )
-    ) {
-        Row(
-            modifier = Modifier.Companion.padding(Spacing.large),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.onErrorContainer,
-                modifier = Modifier.weight(1f)
+private fun BookSearchError(
+    error: String,
+    onClearError: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer
             )
-            TextButton(
-                onClick = onClearError
+        ) {
+            Row(
+                modifier = Modifier.Companion.padding(Spacing.large),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.dismiss))
+                Text(
+                    text = error,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.weight(1f)
+                )
+                TextButton(
+                    onClick = onClearError
+                ) {
+                    Text(stringResource(R.string.dismiss))
+                }
             }
         }
+        Spacer(modifier = Modifier.Companion.height(Spacing.large))
     }
-    Spacer(modifier = Modifier.Companion.height(Spacing.large))
 }
 
 /**
  * Composable for displaying a single book item.
  */
 @Composable
-private fun BookItem(book: Book) {
+private fun BookItem(
+    book: Book,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = Spacing.cardElevation)
     ) {
         Row(
@@ -206,8 +224,7 @@ private fun BookItem(book: Book) {
             ) {
                 Text(
                     text = book.title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -216,7 +233,7 @@ private fun BookItem(book: Book) {
                     Spacer(modifier = Modifier.Companion.height(Spacing.extraSmall))
                     Text(
                         text = stringResource(R.string.author_prefix, author),
-                        fontSize = 14.sp,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -227,7 +244,7 @@ private fun BookItem(book: Book) {
                     Spacer(modifier = Modifier.Companion.height(Spacing.extraSmall))
                     Text(
                         text = stringResource(R.string.published_prefix, year),
-                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

@@ -1,6 +1,9 @@
 package com.tw.openlibrarybooks
 
 import com.tw.common.RequestResult
+import com.tw.networking.Book
+import com.tw.networking.OpenLibraryService
+import com.tw.networking.toBook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +36,7 @@ class OpenlibraryRepository @Inject constructor(
         _searchResults.value = RequestResult.Loading
         val result = openLibraryService.searchBooks(query)
         _searchResults.value = when (result) {
-            is RequestResult.Success -> 
+            is RequestResult.Success ->
                 RequestResult.Success(result.data.docs.map { doc -> doc.toBook() })
             is RequestResult.Error -> result
             is RequestResult.Loading -> result

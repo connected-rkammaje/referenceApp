@@ -42,6 +42,9 @@ dependencies {
     // Common module
     implementation(project(":common"))
 
+    // Networking module
+    implementation(project(":networking"))
+
     implementation(libs.androidx.core.ktx)
 
     // Compose dependencies

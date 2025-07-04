@@ -57,10 +57,11 @@ class NasaAstronomyDetailFragment : Fragment() {
 
 @Composable
 private fun nasaDetailScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(Spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
