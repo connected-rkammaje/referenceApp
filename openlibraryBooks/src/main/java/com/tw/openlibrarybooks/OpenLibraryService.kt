@@ -19,14 +19,24 @@ class OpenLibraryService @Inject constructor(
      * @param query The search query
      * @return RequestResult containing either loading, success with search response, or error
      */
-    suspend fun searchBooks(query: String): RequestResult<SearchResponse> = RequestResult.fromResponse { api.searchBooks(query) }
+    suspend fun searchBooks(
+        query: String
+    ): RequestResult<SearchResponse> = RequestResult.fromResponse {
+        api.searchBooks(
+            query
+        )
+    }
 
     /**
      * Get details for a specific book by ID.
      * @param bookId The Open Library book ID
      * @return RequestResult containing either loading, success with book details, or error
      */
-    suspend fun getBookDetails(bookId: String): RequestResult<Book> = RequestResult.fromResponse { api.getBookDetails(bookId).toBook() }
+    suspend fun getBookDetails(bookId: String): RequestResult<Book> = RequestResult.fromResponse {
+        api.getBookDetails(
+            bookId
+        ).toBook()
+    }
 }
 
 /**
@@ -38,8 +48,8 @@ fun BookDetails.toBook(): Book {
         title = title,
         author = authors?.firstOrNull()?.name,
         publishYear = publish_date?.takeLast(4)?.toIntOrNull(),
-        coverUrl = covers?.firstOrNull()?.let { coverId -> 
-            "https://covers.openlibrary.org/b/id/$coverId-L.jpg" 
+        coverUrl = covers?.firstOrNull()?.let { coverId ->
+            "https://covers.openlibrary.org/b/id/$coverId-L.jpg"
         }
     )
 }
@@ -53,8 +63,8 @@ fun BookDoc.toBook(): Book {
         title = title,
         author = author_name?.firstOrNull(),
         publishYear = first_publish_year,
-        coverUrl = cover_i?.let { coverId -> 
-            "https://covers.openlibrary.org/b/id/$coverId-L.jpg" 
+        coverUrl = cover_i?.let { coverId ->
+            "https://covers.openlibrary.org/b/id/$coverId-L.jpg"
         }
     )
 }

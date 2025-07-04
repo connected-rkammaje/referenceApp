@@ -1,5 +1,7 @@
 package com.tw.openlibrarybooks.data
 
+import com.tw.networking.data.Author
+
 /**
  * Data class representing detailed book information.
  */
